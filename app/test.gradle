@@ -1,0 +1,151 @@
+/**
+ * Gradle基于Groovy，Groovy基于Java
+ *
+ * Android项目都有一个build.gradle文件，用来构建脚本
+ * .gradle文件中包含了Project、Task、Action对象
+ * 每个项目中至少有一个Project
+ * 每个Project里面包含了多个Task
+ * 每个Task代表了构建过程当中的一个原子性操作，如编译、打包、生成javadoc、发布等
+ * Task里面又包含了很多Action
+ * 每个Action是一个代码块，里面包含了需要被执行的代码
+ */
+apply plugin: 'com.android.application' // Project
+
+android {
+    /* buildFile {
+         resources: ''
+     }*/
+
+    buildTypes {
+        release {
+            proguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+//打印gradle的信息
+task printGradleInfo {
+    println "==================================="
+    println("In posdevice, gradle id is " + gradle.hashCode())
+    println "Home Dir: " + gradle.gradleHomeDir
+    println "User Home Dir: " + gradle.gradleUserHomeDir
+    println("Parent: " + gradle.parent)
+    println("===================================")
+}
+
+//监听gradle的运行过程
+gradle.addListener(new LifecycleListener())
+
+class LifecycleListener implements TaskExecutionListener, BuildListener {
+
+    @Override
+    void buildStarted(Gradle gradle) {
+
+    }
+
+    @Override
+    void settingsEvaluated(Settings settings) {
+
+    }
+
+    @Override
+    void projectsLoaded(Gradle gradle) {
+
+    }
+
+    @Override
+    void projectsEvaluated(Gradle gradle) {
+
+    }
+
+    @Override
+    void buildFinished(BuildResult result) {
+
+    }
+
+    @Override
+    void beforeExecute(Task task) {
+        println("beforeExecute " + task.name)
+    }
+
+    @Override
+    void afterExecute(Task task, TaskState state) {
+        println("afterExecute name = " + task.name + " state = " + state.toString())
+    }
+}
+
+task queryInfo << {
+    println name
+    println project.name
+}
+
+//过滤掉一些不执行的task
+def disableDebugBuild() {
+    //project.tasks包含了所有的tasks
+    //findAll是寻找名字中带Debug的task
+    //返回值保存到targetTasks容器中
+    def targetTasks = project.tasks.findAll { task ->
+        task.name.contains("Debug")
+    }
+
+    //对满足条件的task，设置它为disable
+    targetTasks.each {
+        println "disable debug task : ${it.name}"
+        it.setEnabled(false)
+    }
+}
+
+//调用上面的方法
+project.afterEvaluate {
+    disableDebugBuild()
+}
+
+//关闭AndroidTest的task
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('AndroidTest')) {
+        task.enabled = false
+    }
+}
+
+//==============
+// 定义task
+task hello << {
+    println("hello")
+}
+
+task(hello) << {
+    println("hello")
+}
+
+task('hello') << {
+    println('hello')
+}
+
+tasks.create(name: 'hello') << {
+    println("hello")
+}
+
+//按照顺序执行task
+task testAction {
+    doFirst {
+        println("first")
+    }
+    doLast {
+        println("last")
+    }
+}
+//===============
+
+//关联task
+task A <<{
+    println("i am task A")
+}
+task B <<{
+    println("i am task B")
+}
+
+A.dependsOn B
+A.finalizedBy B
+
+
+

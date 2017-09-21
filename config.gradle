@@ -1,0 +1,22 @@
+ext {
+    android = [
+            compileSdkVersion : 25,
+            buildToolsVersion : "26.0.1",
+            applicationId : "com.example.zhaogaofei.firsttestapp",
+            minSdkVersion : 15,
+            targetSdkVersion : 25,
+            versionCode : 1,
+            versionName : "1.0",
+            testInstrumentationRunner : "android.support.test.runner.AndroidJUnitRunner"
+    ]
+
+    def dependVersion = [
+            support      : "25.3.1",
+            constraint   : "1.0.2"
+    ]
+
+    dependencies = [
+            "appcompat-v7"        : "com.android.support:appcompat-v7:${dependVersion.support}",
+            "constraint-layout"   : "com.android.support.constraint:constraint-layout:${dependVersion.constraint}"
+    ]
+}

@@ -1,4 +1,4 @@
-project.apply([plugin: 'com.android.application'])
+apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -11,12 +11,58 @@ android {
         versionName rootProject.ext.android.versionName
         testInstrumentationRunner rootProject.ext.android.testInstrumentationRunner
     }
+
+    signingConfigs {
+        debug {
+            storeFile file(STORE_File_DEBUG)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+        release {
+            storeFile file(STORE_File)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+        staging {
+            storeFile file(STORE_File_DEBUG)
+            storePassword STORE_PASSWORD
+            keyAlias KEY_ALIAS
+            keyPassword KEY_PASSWORD
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.debug
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        staging.initWith(buildTypes.debug)
+        staging {
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            debuggable = false
+        }
     }
+
+    /*productFlavors {
+        red {
+            flavorDimension "color"
+        }
+
+        blue {
+            flavorDimension "color"
+        }
+    }*/
 }
 
 dependencies {
@@ -27,13 +73,10 @@ dependencies {
     compile rootProject.ext.dependencies["appcompat-v7"]
     compile rootProject.ext.dependencies["constraint-layout"]
     testCompile 'junit:junit:4.12'
-
-//    compile 'com.android.support.test:runner:0.5'
-    compile group: 'com.android.support.test', name: 'runner', version: '0.5'
-
+    //    compile 'com.android.support.test:runner:0.5'
+    compile 'com.android.support.test:runner:0.5'
     compile 'com.android.support.test.espresso:espresso-core:2.2.2'
-//    add('compile', 'com.android.support.test.espresso:espresso-core:2.2.2')
-
+    //    add('compile', 'com.android.support.test.espresso:espresso-core:2.2.2')
     compile project(path: ':onelibrary')
-//    add('compile', project(path: ':onelibrary'))
+    //    add('compile', project(path: ':onelibrary'))
 }

@@ -24,4 +24,15 @@
         android:layout_height="wrap_content"
         android:text="click"/>
 
+    <Button
+        android:id="@+id/bt_get_package_main"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="get package"/>
+
+    <TextView
+        android:id="@+id/text_package"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

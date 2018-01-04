@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +38,17 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 OneLibraryMainActivity.start(MainActivity.this);
+            }
+        });
+
+        final TextView textPackage = (TextView) findViewById(R.id.text_package);
+        Button btGet = (Button) findViewById(R.id.bt_get_package_main);
+        btGet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String name = MainActivity.this.getPackageName();
+                Log.e("====", "====" + name);
+                textPackage.setText(name);
             }
         });
     }

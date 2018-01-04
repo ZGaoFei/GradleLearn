@@ -34,4 +34,9 @@ public class CalculatorTest {
         assertEquals(5, calculator.multiply(2, 3), 1);
     }
 
+    @Test
+    public void testList() throws Exception {
+        calculator.printList();
+    }
+
 }
